@@ -1,17 +1,22 @@
 version: "3.5"
 
 services:
-  # Express Service
-  express:
-    build: .
-    command: yarn dev
+  vue:
+    build: ./frontend
     volumes:
-      - .:/usr/app/
+      - ./frontend:/usr/app/
       - /usr/app/node_modules
     ports:
-      - 3000:3000
-    depends_on:
-      - mongo
+      - ${COMPOSE_FRONTEND_PORT}:3000
+
+  # Express Service
+  express:
+    build: ./backend
+    volumes:
+      - ./backend:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - ${COMPOSE_BACKEND_PORT}:8000
 
   # Mongo Service
   mongo:

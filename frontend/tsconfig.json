@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@root/*": ["*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
