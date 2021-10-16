@@ -1,0 +1,8 @@
+{
+  "name": "AccelByte Backend",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "express",
+  "shutdownAction": "none",
+  "extensions": [],
+  "workspaceFolder": "/usr/app/"
+}

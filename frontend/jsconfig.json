@@ -1,0 +1,4 @@
+{
+  "rootDir": "./src",
+  "exclude": ["node_modules", "compiled"]
+}

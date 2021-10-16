@@ -1,5 +1,6 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = {
@@ -18,6 +19,26 @@ module.exports = {
         test: /\.js$/,
         loader: "babel-loader",
       },
+      {
+        test: /\.s(c|a)ss$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              implementation: require("sass"),
+              indentedSyntax: true,
+            },
+            options: {
+              implementation: require("sass"),
+              sassOptions: {
+                indentedSyntax: true,
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -35,6 +56,7 @@ module.exports = {
   resolve: {
     alias: {
       vue: "vue/dist/vue.js",
+      "@": path.resolve(__dirname, "src"),
     },
   },
   devServer: {

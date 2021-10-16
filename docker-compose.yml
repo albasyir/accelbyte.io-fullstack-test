@@ -2,6 +2,7 @@ version: "3.5"
 
 services:
   vue:
+    container_name: accelbyte_vue_test
     build: ./frontend
     volumes:
       - ./frontend:/usr/app/
@@ -11,6 +12,7 @@ services:
 
   # Express Service
   express:
+    container_name: accelbyte_express_test
     build: ./backend
     volumes:
       - ./backend:/usr/app/

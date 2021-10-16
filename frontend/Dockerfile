@@ -4,7 +4,6 @@ WORKDIR /usr/app
 
 COPY . .
 RUN yarn
-RUN yarn global add @vue/cli
 
-CMD ["vue-cli-service", "serve", "--open"]
+CMD ["yarn", "dev"]
 EXPOSE 3000

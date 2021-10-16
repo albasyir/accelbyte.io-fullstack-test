@@ -1,0 +1,14 @@
+{
+  "name": "AccelByte Frontend",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "vue",
+  "shutdownAction": "none",
+  "extensions": [
+    "sdras.vue-vscode-extensionpack",
+    "esbenp.prettier-vscode",
+    "withfig.fig",
+    "github.copilot",
+    "eamodio.gitlens"
+  ],
+  "workspaceFolder": "/usr/app/"
+}
