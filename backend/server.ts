@@ -9,10 +9,10 @@ const app = express();
 expressInjection(app);
 
 // inject our router
-import webRoute from "./src/routers/web";
+import apiRoute from "./src/routers/api";
 const web = Router();
 app.use("/", web);
-webRoute(web);
+apiRoute(web);
 
 // open express http
 app.listen(8000, "0.0.0.0");

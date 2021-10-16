@@ -3,6 +3,11 @@
   "dockerComposeFile": ["../docker-compose.yml"],
   "service": "express",
   "shutdownAction": "none",
-  "extensions": [],
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "withfig.fig",
+    "github.copilot",
+    "eamodio.gitlens"
+  ],
   "workspaceFolder": "/usr/app/"
 }
