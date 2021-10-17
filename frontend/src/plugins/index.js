@@ -1,8 +1,11 @@
+import Vue from "vue";
+import axios from "./axios";
+
 /**
- * Global plugin bootstraping
+ * Vue instance plgins
  *
  */
-import "./axios";
+Vue.prototype.$http = axios;
 
 /**
  * Vue Plugin Injector
@@ -11,4 +14,5 @@ import "./axios";
 export const vueInjection = {
   vuetify: require("./vuetify").default,
   router: require("./vue-router").default,
+  store: require("./vuex").default,
 };

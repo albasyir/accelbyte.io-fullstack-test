@@ -1,4 +1,6 @@
 {
-  "rootDir": "./src",
-  "exclude": ["node_modules", "compiled"]
+  "compilerOptions": {
+    "rootDir": "./src",
+    "exclude": ["node_modules", "compiled"]
+  }
 }

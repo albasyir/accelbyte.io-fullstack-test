@@ -1,138 +1,207 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col lg="6" cols="12">
-        <v-card v-bind="cardAttrs">
-          <v-card-title>
-            <slot name="header" />
-          </v-card-title>
+  <v-row>
+    <v-col lg="6" cols="12">
+      <v-card v-bind="cardAttrs">
+        <v-card-title>
+          <slot name="header" />
+        </v-card-title>
 
-          <v-form :disabled="cardAttrs.loading" ref="form">
-            <v-stepper v-model="step">
-              <v-stepper-header>
-                <v-stepper-step :complete="stepOneCompleted" step="1">
-                  Summary
-                </v-stepper-step>
+        <v-form :disabled="formDisabled" ref="form">
+          <v-stepper v-model="step">
+            <v-stepper-header>
+              <v-stepper-step :complete="stepOneCompleted" step="1">
+                Summary
+              </v-stepper-step>
 
-                <v-stepper-step :complete="stepTwoCompleted" step="2">
-                  Ingredients
-                </v-stepper-step>
+              <v-stepper-step :complete="stepTwoCompleted" step="2">
+                Ingredients
+              </v-stepper-step>
 
-                <v-stepper-step :complete="stepThreeCompleted" step="3">
-                  Steps
-                </v-stepper-step>
+              <v-stepper-step :complete="stepThreeCompleted" step="3">
+                Steps
+              </v-stepper-step>
 
-                <v-stepper-step :complete="stepFourCompleted" step="4">
-                  Photos
-                </v-stepper-step>
-              </v-stepper-header>
-              <v-stepper-items>
-                <v-stepper-content step="1">
-                  <v-text-field
-                    v-model="values.name"
-                    label="Name"
-                    required
-                  ></v-text-field>
+              <v-stepper-step :complete="stepFourCompleted" step="4">
+                Photos
+              </v-stepper-step>
+            </v-stepper-header>
+            <v-stepper-items>
+              <v-stepper-content step="1">
+                <v-text-field
+                  class="pt-1"
+                  outlined
+                  dense
+                  v-model="values.name"
+                  label="Name"
+                  :error-messages="errorServer.name"
+                  required
+                ></v-text-field>
 
-                  <v-text-field
-                    v-model="values.type"
-                    label="Type"
-                    required
-                  ></v-text-field>
+                <v-text-field
+                  outlined
+                  dense
+                  v-model="values.type"
+                  label="Type"
+                  required
+                ></v-text-field>
 
-                  <v-textarea
-                    v-model="values.description"
-                    label="Description"
-                    required
-                  />
-                </v-stepper-content>
+                <v-textarea
+                  outlined
+                  dense
+                  v-model="values.description"
+                  label="Description"
+                  required
+                />
+              </v-stepper-content>
 
-                <v-stepper-content step="2">
-                  <v-row>
-                    <v-col sm="8">
-                      <v-text-field
-                        v-model="tempIngredient.name"
-                        label="Name"
-                      />
+              <v-stepper-content step="2">
+                <v-row dense class="pt-1">
+                  <v-col sm="8">
+                    <v-text-field
+                      outlined
+                      dense
+                      v-model="tempIngredient.name"
+                      label="Name"
+                    />
+                  </v-col>
+                  <v-col sm="2" cols="4">
+                    <v-text-field
+                      outlined
+                      dense
+                      v-model="tempIngredient.qty"
+                      label="Qty"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="pushTempIngredient" icon>
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-list dense>
+                  <v-list-item
+                    v-for="(ingredient, key) in values.ingredients"
+                    :key="key"
+                    two-line
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>{{
+                        ingredient.name
+                      }}</v-list-item-title>
+                      <v-list-item-subtitle>{{
+                        ingredient.qty
+                      }}</v-list-item-subtitle>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <v-btn icon @click="deleteIngredient(key)">
+                        <v-icon color="red lighten-1">mdi-close</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-stepper-content>
+
+              <v-stepper-content step="3">
+                <v-textarea
+                  class="pt-1"
+                  outlined
+                  dense
+                  label="Step"
+                  v-model="tempStep"
+                  height="80px"
+                />
+                <v-btn @click="pushTempStep">
+                  Add Step
+                </v-btn>
+
+                <v-list dense>
+                  <v-list-item
+                    v-for="(step, key) in values.steps"
+                    :key="key"
+                    two-line
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        Step {{ key + 1 }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        {{ step }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <v-btn icon @click="deleteStep(key)">
+                        <v-icon color="red lighten-1">mdi-close</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-stepper-content>
+
+              <v-stepper-content step="4">
+                <v-row dense class="mt-1">
+                  <template v-for="(photo, key) in values.photos">
+                    <v-col sm="10" :key="key + 'input'">
+                      <v-file-input
+                        accept="image/png, image/jpeg"
+                        :rules="rules.photos"
+                        prepend-icon="mdi-camera"
+                        :label="'Upload Cover Picture ' + (key + 1)"
+                        truncate-length="15"
+                        dense
+                        outlined
+                        v-model="values.photos[key]"
+                      ></v-file-input>
                     </v-col>
-                    <v-col sm="2" cols="4">
-                      <v-text-field v-model="tempIngredient.qty" label="Qty" />
-                    </v-col>
-                    <v-col>
-                      <v-btn @click="pushTempIngredient" x-large icon>
-                        <v-icon>mdi-plus</v-icon>
+                    <v-col :key="key + 'remove'">
+                      <v-btn color="red" icon @click="removePicture(key)">
+                        <v-icon>mdi-close</v-icon>
                       </v-btn>
                     </v-col>
-                  </v-row>
-                  <v-list>
-                    <v-list-item
-                      v-for="(ingredient, key) in values.ingredients"
-                      :key="key"
-                      two-line
-                    >
-                      <v-list-item-content>
-                        <v-list-item-title>{{
-                          ingredient.name
-                        }}</v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          ingredient.qty
-                        }}</v-list-item-subtitle>
-                      </v-list-item-content>
+                  </template>
+                </v-row>
+                <v-btn class="ma-1" @click="appendPicture">
+                  Add Other Photo
+                </v-btn>
+              </v-stepper-content>
+            </v-stepper-items>
+          </v-stepper>
 
-                      <v-list-item-action>
-                        <v-btn icon @click="deleteIngredient(key)">
-                          <v-icon color="red lighten-1">mdi-close</v-icon>
-                        </v-btn>
-                      </v-list-item-action>
-                    </v-list-item>
-                  </v-list>
-                </v-stepper-content>
+          <v-card-actions>
+            <v-divider class="mx-4" />
+            <v-btn text v-if="step > 1" dark color="blue" @click="step--">
+              Back
+            </v-btn>
+            <v-btn text v-if="step < 4" color="purple" @click="step++">
+              Next
+            </v-btn>
+            <v-btn
+              :dark="valid"
+              v-if="step >= 4"
+              :disabled="!valid"
+              color="purple"
+              @click="submit"
+            >
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-col>
+    <v-col lg="6" cols="12">
+      <v-card>
+        <v-card-title>
+          Card Preview
+          <v-divider class="mx-2" />
+        </v-card-title>
 
-                <v-stepper-content step="3">
-                  <v-btn>
-                    Add
-                  </v-btn>
-                </v-stepper-content>
-
-                <v-stepper-content step="4">
-                  <v-btn>
-                    Add
-                  </v-btn>
-                </v-stepper-content>
-              </v-stepper-items>
-            </v-stepper>
-
-            <v-card-actions>
-              <v-divider class="mx-4" />
-              <v-btn text v-if="step > 1" dark color="blue" @click="step--">
-                Back
-              </v-btn>
-              <v-btn text v-if="step < 4" color="purple" @click="step++">
-                Next
-              </v-btn>
-              <v-btn
-                :dark="valid"
-                v-if="step >= 4"
-                :disabled="!valid"
-                color="purple"
-                @click="step++"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card>
-          <v-card-title>Preview</v-card-title>
-          <v-card-text>
-            <preview-card v-bind="values" />
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+        <v-card-text>
+          <preview-card :tab="step - 1" v-bind="values" />
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -145,12 +214,11 @@ export default {
 
   data: () => ({
     step: 1,
-    valid: true,
     values: {
       name: null,
       type: null,
       description: null,
-      photos: [],
+      photos: [null],
       ingredients: [],
       steps: [],
     },
@@ -158,6 +226,13 @@ export default {
       name: null,
       qty: null,
     },
+    rules: {
+      photos: [
+        (v) => !!v || "Please upload image or delete this row",
+        (v) => (v && v.size < 10000000) || "Size less than 10 MB",
+      ],
+    },
+    tempStep: null,
   }),
 
   props: {
@@ -165,8 +240,14 @@ export default {
   },
 
   computed: {
+    formDisabled() {
+      return !!this.cardAttrs?.loading;
+    },
+
     stepOneCompleted() {
-      return this.values.name && this.values.type && this.values.description;
+      return (
+        !!this.values.name && !!this.values.type && !!this.values.description
+      );
     },
 
     stepTwoCompleted() {
@@ -178,7 +259,7 @@ export default {
     },
 
     stepFourCompleted() {
-      return this.values.photos.length > 0;
+      return this.values.photos.length > 0 && this.values.photos[0] != null;
     },
 
     valid() {
@@ -188,6 +269,10 @@ export default {
         this.stepThreeCompleted &&
         this.stepFourCompleted
       );
+    },
+
+    errorServer() {
+      return {};
     },
   },
 
@@ -206,6 +291,27 @@ export default {
 
     deleteIngredient(key) {
       this.values.ingredients.splice(key, 1);
+    },
+
+    pushTempStep() {
+      this.values.steps.push(this.tempStep);
+      this.tempStep = null;
+    },
+
+    deleteStep(key) {
+      this.values.steps.splice(key, 1);
+    },
+
+    removePicture(key) {
+      if (this.values.photos.length > 1) {
+        this.values.photos.splice(key, 1);
+      } else {
+        this.values.photos[0] = null;
+      }
+    },
+
+    appendPicture() {
+      this.values.photos.push(null);
     },
   },
 };

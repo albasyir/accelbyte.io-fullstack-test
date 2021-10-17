@@ -1,10 +1,7 @@
 import axios from "axios";
-import Vue from "vue";
 
 const request = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: process.env.RECIPE_API,
 });
-
-Vue.prototype.$request = request;
 
 export default request;

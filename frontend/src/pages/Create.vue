@@ -1,40 +1,37 @@
 <template>
-  <recipe-form :cardAttrs="{ loading }" @submit="sendData">
-    <template v-slot:header>
-      Create Recipe
-    </template>
-  </recipe-form>
+  <v-container>
+    <recipe-form :cardAttrs="{ loading }" @submit="sendData">
+      <template v-slot:header>
+        Create Recipe
+      </template>
+    </recipe-form>
+  </v-container>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 import RecipeForm from "../components/RecipeForm.vue";
 
 export default {
-  data: () => ({
-    loading: false,
-  }),
-
   components: {
     RecipeForm,
   },
-
   computed: {
-    target() {
-      return this.$route.params.id;
-    },
-  },
-
-  beforeMount() {
-    // this.fetchRecipe();
+    ...mapGetters({
+      loading: "recipe/storing",
+    }),
   },
 
   methods: {
-    fetchRecipe() {
-      return this.$store.dispatch("recipe/fetch", this.target);
-    },
+    ...mapActions({
+      store: "recipe/store",
+    }),
 
     sendData(editedRecipeData) {
-      console.log(editedRecipeData);
+      this.store(editedRecipeData).then(() => {
+        this.$router.push("/");
+      });
     },
   },
 };

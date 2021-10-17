@@ -8,11 +8,17 @@ const app = express();
 // inject our plugin
 expressInjection(app);
 
-// inject our router
+// inject api router
 import apiRoute from "./src/routers/api";
-const web = Router();
-app.use("/", web);
-apiRoute(web);
+const api = Router();
+apiRoute(api);
+app.use("/", api);
+
+// inject static router
+import assetRoute from "./src/routers/asset";
+const asset = Router();
+assetRoute(asset);
+app.use("/public", asset);
 
 // open express http
 app.listen(8000, "0.0.0.0");
