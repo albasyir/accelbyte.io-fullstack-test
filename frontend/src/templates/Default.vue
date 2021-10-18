@@ -25,6 +25,7 @@
           outlined
           v-model="filter.keyword"
           @keyup="onFilter"
+          @click:clear="clearKeyword"
           clearable
         />
 
@@ -107,6 +108,10 @@ export default {
   },
 
   methods: {
+    clearKeyword() {
+      this.filter.keyword = "";
+      this.onFilter();
+    },
     onFilter: function() {
       if (this.$route.path != "/") this.$router.push("/");
 

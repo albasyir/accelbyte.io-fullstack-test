@@ -235,38 +235,19 @@ export default {
     tempStep: null,
   }),
 
-  watch: {
-    value: {
-      deep: true,
-      handler() {
-        if (!this.value) return;
-
-        let value = { ...this.value };
-
-        if (value.photos.length) {
-          value.photos.forEach((url) => {
-            if (typeof url == "string")
-              this.$http.get(url).then((res) => {
-                let index = value.photos.indexOf(url);
-                let fileName = "Current Picture " + index + 1 + ".jpg";
-                let file = new File([res.data], fileName, {
-                  type: "image/jpeg",
-                });
-                value.photos[value.photos.indexOf(url)] = file;
-              });
-          });
-        }
-
-        this.values = value;
-      },
-    },
-    values: console.log,
-  },
-
   props: {
     cardAttrs: Object,
     value: {
       required: false,
+    },
+  },
+
+  watch: {
+    value: {
+      handler() {
+        this.values = this.value;
+      },
+      deep: true,
     },
   },
 
@@ -308,13 +289,6 @@ export default {
         this.stepThreeCompleted &&
         this.stepFourCompleted
       );
-    },
-
-    errorServer() {
-      let errors = this.$store.getters["recipe/errorForm"];
-      for (let key in errors) errors[key] = errors[key].message;
-      console.log(errors);
-      return errors;
     },
   },
 
