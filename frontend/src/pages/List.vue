@@ -16,7 +16,7 @@
           simple-view
           v-bind="{
             name: 'Your Recipe',
-            type: 'Main Recipe',
+            category: 'Your Category',
             description:
               'Your recipe founded by your hand and making your recipe can accessable by milions person in world',
           }"

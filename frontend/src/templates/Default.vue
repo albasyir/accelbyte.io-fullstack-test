@@ -22,20 +22,22 @@
         rounded
         outlined
         v-model="filter.keyword"
-        @keyup="onFilter"
+        @change="onFilter"
+        clearable
       />
 
       <v-spacer />
 
-      <v-text-field
+      <v-select
         hide-details
         dense
         label="Category"
         prepend-icon="mdi-magnify"
-        rounded
         outlined
+        :items="$store.getters['recipe/categories']"
+        clearable
         v-model="filter.category"
-        @keyup="onFilter"
+        @change="onFilter"
       />
 
       <v-spacer />
@@ -48,6 +50,21 @@
     <v-main>
       <router-view />
     </v-main>
+
+    <v-snackbar v-model="snackbarShow" v-bind="snackbar.attrs">
+      <div v-html="snackbar.content" />
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          dark
+          text
+          v-bind="attrs"
+          @click="snackbarShow = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-footer app>
       Abdul Aziz Al Basyir
@@ -65,16 +82,29 @@ export default {
         keyword: "",
         category: "",
       },
+      snackbarShow: false,
     };
+  },
+
+  computed: {
+    snackbar: function() {
+      this.snackbarShow = false;
+      this.snackbarShow = true;
+      return this.$store.getters.snackbar;
+    },
   },
 
   methods: {
     onFilter: function() {
       this.$store.commit("recipe/setKeyword", this.filter.keyword);
-      this.$store.commit("recipe/setType", this.filter.category);
+      this.$store.commit("recipe/setCategory", this.filter.category);
 
       this.$store.dispatch("recipe/fetch");
     },
+  },
+
+  mounted() {
+    this.snackbarShow = false;
   },
 };
 </script>

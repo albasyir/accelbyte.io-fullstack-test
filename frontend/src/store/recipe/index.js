@@ -6,22 +6,26 @@ export default {
   getters: {
     // filter
     keyword: (state) => state.keyword,
-    type: (state) => state.type,
+    category: (state) => state.category,
 
     // data
-    list: (state) => state.recipes,
-    detail: (state) => state.detail,
+    list: (state) => state.recipes || null,
+    detail: (state) => state.detail || null,
+
+    categories: (state) => state.categories || null,
 
     // loading
     listIsFetching: (state) => state.fetchingList,
     detailIsFetching: (state) => state.fetchingDetail,
     storing: (state) => state.storing,
     deleting: (state) => state.deleting,
+    updating: (state) => state.updating,
   },
   state: {
     // filter
     keyword: "",
-    type: "",
+    category: "",
+    categories: ["main course", "dessert", "appetizer", "drink"],
 
     // data
     detail: {},
@@ -32,6 +36,7 @@ export default {
     fetchingList: false,
     storing: false,
     deleting: false,
+    updating: false,
   },
   mutations: {
     // filter
@@ -39,8 +44,8 @@ export default {
       state.keyword = keyword;
     },
 
-    setType(state, type) {
-      state.type = type;
+    setCategory(state, category) {
+      state.category = category;
     },
 
     // data setters
@@ -68,6 +73,10 @@ export default {
       state.detail = detail;
     },
 
+    cleanDetail(state) {
+      state.detail = {};
+    },
+
     // loading setters
     setLoadingList(state, condition) {
       state.fetchingList = condition;
@@ -81,6 +90,9 @@ export default {
     setDeleting(state, deleting) {
       state.deleting = deleting;
     },
+    setUpdating(state, updating) {
+      state.updating = updating;
+    },
   },
   actions: {
     fetch({ commit, getters }) {
@@ -90,7 +102,7 @@ export default {
         .get("/recipe", {
           params: {
             keyword: getters.keyword,
-            type: getters.type, // type means category
+            category: getters.category,
           },
         })
         .then((res) => {
@@ -105,13 +117,17 @@ export default {
     },
 
     fetchOne({ commit }, id) {
+      commit("cleanDetail");
+      commit("setLoadingDetail", true);
       return axios
         .get("/recipe/" + id)
         .then((res) => {
           commit("setDetail", res.data);
+          commit("setLoadingDetail", false);
           return res.data;
         })
         .catch((e) => {
+          commit("setLoadingDetail", false);
           return Promise.reject(e);
         });
     },
@@ -147,15 +163,17 @@ export default {
     },
 
     update({ commit }, id, updatedData) {
-      commit("setStoring", true);
+      let formData = serialize(updatedData);
+
+      commit("setUpdating", true);
       return axios
-        .put("/recipe/" + id, updatedData)
+        .put("/recipe/" + id, formData)
         .then((res) => {
-          commit("setStoring", false);
+          commit("setUpdating", false);
           return res.data;
         })
         .catch((e) => {
-          commit("setStoring", false);
+          commit("setUpdating", false);
           return Promise.reject(e);
         });
     },

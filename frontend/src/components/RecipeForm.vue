@@ -33,17 +33,17 @@
                   dense
                   v-model="values.name"
                   label="Name"
-                  :error-messages="errorServer.name"
                   required
                 ></v-text-field>
 
-                <v-text-field
+                <v-select
+                  :items="categories"
+                  v-model="values.category"
+                  label="Category"
                   outlined
-                  dense
-                  v-model="values.type"
-                  label="Type"
                   required
-                ></v-text-field>
+                  dense
+                ></v-select>
 
                 <v-textarea
                   outlined
@@ -216,7 +216,7 @@ export default {
     step: 1,
     values: {
       name: null,
-      type: null,
+      category: null,
       description: null,
       photos: [null],
       ingredients: [],
@@ -235,8 +235,34 @@ export default {
     tempStep: null,
   }),
 
+  watch: {
+    value: {
+      deep: true,
+      handler(newVal) {
+        let value = { ...newVal };
+
+        if (value.photos.length) {
+          var reader = new FileReader();
+
+          value.photos = value.photos.map((url) => {
+            reader.readAsDataURL(url);
+            reader.onload = function(e) {
+              console.log("DataURL:", e.target.result);
+            };
+            return photo;
+          });
+        }
+
+        this.values = newVal;
+      },
+    },
+  },
+
   props: {
     cardAttrs: Object,
+    value: {
+      required: false,
+    },
   },
 
   computed: {
@@ -244,9 +270,15 @@ export default {
       return !!this.cardAttrs?.loading;
     },
 
+    categories() {
+      return this.$store.getters["recipe/categories"];
+    },
+
     stepOneCompleted() {
       return (
-        !!this.values.name && !!this.values.type && !!this.values.description
+        !!this.values.name &&
+        !!this.values.category &&
+        !!this.values.description
       );
     },
 
@@ -272,7 +304,10 @@ export default {
     },
 
     errorServer() {
-      return {};
+      let errors = this.$store.getters["recipe/errorForm"];
+      for (let key in errors) errors[key] = errors[key].message;
+      console.log(errors);
+      return errors;
     },
   },
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Recipe from "../../models/Recipe";
+import Recipe, { RecipeType } from "../../models/Recipe";
 
 export default class RecipeController {
   /**
@@ -9,34 +9,26 @@ export default class RecipeController {
    * @param res Response
    */
   static async list(req: Request, res: Response) {
-    let filter = [];
+    let filter: any = {};
 
     // filter by keyword
     if (req.query.keyword && req.query.keyword.length) {
-      // filter name or description
-      filter.push({ name: { $regex: req.query.keyword, $options: "i" } });
-      filter.push({
-        description: { $regex: req.query.keyword, $options: "i" },
-      });
+      filter.$or = [
+        { name: { $regex: req.query.keyword, $options: "i" } },
+        { description: { $regex: req.query.keyword, $options: "i" } },
+      ];
     }
 
     // filter by category
-    // type means category
-    if (req.query.type && req.query.type.length) {
-      filter.push({ type: { $regex: req.query.type, $options: "i" } });
+    if (req.query.category) {
+      filter.category = req.query.category;
     }
 
-    // build query
-    let query = {};
-    if (filter.length) {
-      query = { $or: filter };
-    }
-
-    // get all recipes that filtered by keyword and type
-    Recipe.find(query)
+    // get all recipes that filtered by keyword and category
+    Recipe.find(filter)
 
       // select only field that we need
-      .select(["name", "description", "type", "photos.path"])
+      .select(["name", "description", "category", "photos.path"])
 
       // success response
       .then((recipes) => {
@@ -76,10 +68,11 @@ export default class RecipeController {
 
       // error response
       .catch((error) => {
-        res.json(error);
+        if (error.name === "ValidationError") {
+          res.status(422);
+          return res.json(error); // when unprosses entity
+        }
 
-        // TODO
-        // res.status(422); // when unprosses entity
         res.status(400); // bad request
       });
   }
@@ -91,15 +84,22 @@ export default class RecipeController {
    * @param res Response
    */
   static update(req: Request, res: Response) {
-    Recipe.findOneAndUpdate({ _id: req.params.id }, req.body)
+    // pripare data
+    const data = {
+      ...req.body,
+      photos: req.files,
+    };
+
+    Recipe.findOneAndUpdate({ _id: req.params.id }, data)
       .then((result) => {
         res.status(204).end();
       })
       .catch((error) => {
-        res.json(error);
+        if (error.name === "ValidationError") {
+          res.status(422);
+          return res.json(error);
+        }
 
-        // TODO
-        // res.status(422); // when unprosses entity
         res.status(400); // bad request
       });
   }

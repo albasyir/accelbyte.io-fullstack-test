@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="loading" v-bind="cardAttrs">
+  <v-card class="d-flex flex-column" :loading="loading" v-bind="cardAttrs">
     <v-overlay absolute v-if="hasOverlaySlot">
       <slot name="overlay" />
     </v-overlay>
@@ -15,7 +15,7 @@
     <v-card-title v-text="name || '-'" />
 
     <v-card-subtitle>
-      {{ type || "-" }}
+      {{ category || "-" }}
     </v-card-subtitle>
 
     <v-carousel
@@ -84,6 +84,8 @@
         </v-tab-item>
       </v-tabs-items>
     </v-card-text>
+
+    <v-spacer></v-spacer>
 
     <v-card-actions v-if="id">
       <v-divider class="mx-4"></v-divider>
@@ -205,7 +207,7 @@ export default {
       default: undefined,
     },
 
-    type: {
+    category: {
       type: String,
       default: undefined,
     },

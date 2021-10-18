@@ -1,5 +1,5 @@
 <template>
-  <recipe-form :cardAttrs="{ loading }" @submit="sendData">
+  <recipe-form :value="recipe" :cardAttrs="{ loading }" @submit="sendData">
     <template v-slot:header>
       Edit Recipe
     </template>
@@ -9,33 +9,39 @@
 <script>
 import RecipeForm from "../components/RecipeForm.vue";
 
-export default {
-  data: () => ({
-    loading: true,
-  }),
+import { mapActions, mapGetters } from "vuex";
 
+export default {
   components: {
     RecipeForm,
   },
 
+  methods: {
+    ...mapActions({
+      fetch: "recipe/fetchOne",
+      update: "recipe/update",
+    }),
+
+    sendData(editedRecipeData) {
+      this.update(this.id, editedRecipeData).then(() => {
+        this.$router.push("/");
+      });
+    },
+  },
+
   computed: {
-    target() {
+    ...mapGetters({
+      recipe: "recipe/detail",
+      loading: "recipe/detailIsFetching",
+    }),
+
+    id() {
       return this.$route.params.id;
     },
   },
 
   beforeMount() {
-    // this.fetchRecipe();
-  },
-
-  methods: {
-    fetchRecipe() {
-      return this.$store.dispatch("recipe/fetch", this.target);
-    },
-
-    sendData(editedRecipeData) {
-      console.log(editedRecipeData);
-    },
+    this.fetch(this.id);
   },
 };
 </script>
