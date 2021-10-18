@@ -12,7 +12,13 @@ request.interceptors.response.use(
   (error) => {
     let errorMessage = error.response.data.message;
 
-    errorMessage = errorMessage.replaceAll(/path/gi, "field");
+    if (errorMessage) errorMessage = errorMessage.replaceAll(/path/gi, "field");
+
+    if (error.response.status === 404) {
+      errorMessage = "Recipe not found";
+    } else {
+      errorMessage = "Something went wrong";
+    }
 
     store.commit("setErrors", errorMessage);
 

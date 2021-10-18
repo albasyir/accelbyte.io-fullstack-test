@@ -1,9 +1,15 @@
 <template>
-  <recipe-form :value="recipe" :cardAttrs="{ loading }" @submit="sendData">
-    <template v-slot:header>
-      Edit Recipe
-    </template>
-  </recipe-form>
+  <v-container>
+    <recipe-form
+      :value="recipe"
+      :cardAttrs="{ loading: loadingDetail || loadingUpdate }"
+      @submit="sendData"
+    >
+      <template v-slot:header>
+        Edit Recipe
+      </template>
+    </recipe-form>
+  </v-container>
 </template>
 
 <script>
@@ -23,7 +29,7 @@ export default {
     }),
 
     sendData(editedRecipeData) {
-      this.update(this.id, editedRecipeData).then(() => {
+      this.update({ id: this.id, data: editedRecipeData }).then(() => {
         this.$router.push("/");
       });
     },
@@ -32,7 +38,8 @@ export default {
   computed: {
     ...mapGetters({
       recipe: "recipe/detail",
-      loading: "recipe/detailIsFetching",
+      loadingDetail: "recipe/detailIsFetching",
+      loadingUpdate: "recipe/updating",
     }),
 
     id() {

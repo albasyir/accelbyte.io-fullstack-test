@@ -11,6 +11,7 @@ export default {
     // data
     list: (state) => state.recipes || null,
     detail: (state) => state.detail || null,
+    disableFilter: (state) => state.disableFilter,
 
     categories: (state) => state.categories || null,
 
@@ -26,6 +27,7 @@ export default {
     keyword: "",
     category: "",
     categories: ["main course", "dessert", "appetizer", "drink"],
+    disableFilter: false,
 
     // data
     detail: {},
@@ -75,6 +77,10 @@ export default {
 
     cleanDetail(state) {
       state.detail = {};
+    },
+
+    toggleFilter(state, newCondition) {
+      state.disableFilter = newCondition;
     },
 
     // loading setters
@@ -162,8 +168,8 @@ export default {
         });
     },
 
-    update({ commit }, id, updatedData) {
-      let formData = serialize(updatedData);
+    update({ commit }, { id, data }) {
+      let formData = serialize(data);
 
       commit("setUpdating", true);
       return axios

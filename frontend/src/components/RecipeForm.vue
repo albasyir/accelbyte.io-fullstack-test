@@ -152,7 +152,7 @@
                         dense
                         outlined
                         v-model="values.photos[key]"
-                      ></v-file-input>
+                      />
                     </v-col>
                     <v-col :key="key + 'remove'">
                       <v-btn color="red" icon @click="removePicture(key)">
@@ -238,24 +238,29 @@ export default {
   watch: {
     value: {
       deep: true,
-      handler(newVal) {
-        let value = { ...newVal };
+      handler() {
+        if (!this.value) return;
+
+        let value = { ...this.value };
 
         if (value.photos.length) {
-          var reader = new FileReader();
-
-          value.photos = value.photos.map((url) => {
-            reader.readAsDataURL(url);
-            reader.onload = function(e) {
-              console.log("DataURL:", e.target.result);
-            };
-            return photo;
+          value.photos.forEach((url) => {
+            if (typeof url == "string")
+              this.$http.get(url).then((res) => {
+                let index = value.photos.indexOf(url);
+                let fileName = "Current Picture " + index + 1 + ".jpg";
+                let file = new File([res.data], fileName, {
+                  type: "image/jpeg",
+                });
+                value.photos[value.photos.indexOf(url)] = file;
+              });
           });
         }
 
-        this.values = newVal;
+        this.values = value;
       },
     },
+    values: console.log,
   },
 
   props: {
@@ -266,6 +271,8 @@ export default {
   },
 
   computed: {
+    syncValueProps() {},
+
     formDisabled() {
       return !!this.cardAttrs?.loading;
     },

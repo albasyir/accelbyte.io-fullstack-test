@@ -58,5 +58,13 @@ export default {
   beforeMount() {
     this.fetch();
   },
+
+  created() {
+    this.$store.commit("recipe/toggleFilter", true);
+  },
+
+  beforeDestroy() {
+    this.$store.commit("recipe/toggleFilter", false);
+  },
 };
 </script>

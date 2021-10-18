@@ -12,7 +12,7 @@ export default function api(router: Router) {
 
   recipeRouter.get("/", RecipeController.list);
   recipeRouter.post("/", RecipeController.store);
-  recipeRouter.put("/", RecipeController.delete);
+  recipeRouter.put("/:id", RecipeController.update);
   recipeRouter.delete("/:id", RecipeController.delete);
   recipeRouter.get("/:id", RecipeController.detail);
 }

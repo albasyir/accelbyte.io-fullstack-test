@@ -14,31 +14,35 @@
 
       <v-spacer />
 
-      <v-text-field
-        hide-details
-        dense
-        label="Keyword"
-        prepend-icon="mdi-magnify"
-        rounded
-        outlined
-        v-model="filter.keyword"
-        @change="onFilter"
-        clearable
-      />
+      <template v-if="disableFilter">
+        <v-text-field
+          :loading="searchLoading"
+          hide-details
+          dense
+          label="Keyword"
+          prepend-icon="mdi-magnify"
+          rounded
+          outlined
+          v-model="filter.keyword"
+          @keyup="onFilter"
+          clearable
+        />
 
-      <v-spacer />
+        <v-spacer />
 
-      <v-select
-        hide-details
-        dense
-        label="Category"
-        prepend-icon="mdi-magnify"
-        outlined
-        :items="$store.getters['recipe/categories']"
-        clearable
-        v-model="filter.category"
-        @change="onFilter"
-      />
+        <v-select
+          :loading="searchLoading"
+          hide-details
+          dense
+          label="Category"
+          prepend-icon="mdi-magnify"
+          outlined
+          :items="$store.getters['recipe/categories']"
+          clearable
+          v-model="filter.category"
+          @change="onFilter"
+        />
+      </template>
 
       <v-spacer />
 
@@ -92,10 +96,20 @@ export default {
       this.snackbarShow = true;
       return this.$store.getters.snackbar;
     },
+
+    searchLoading() {
+      return this.$store.getters["recipe/fetchingList"];
+    },
+
+    disableFilter() {
+      return this.$store.getters["recipe/disableFilter"];
+    },
   },
 
   methods: {
     onFilter: function() {
+      if (this.$route.path != "/") this.$router.push("/");
+
       this.$store.commit("recipe/setKeyword", this.filter.keyword);
       this.$store.commit("recipe/setCategory", this.filter.category);
 
