@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!-- RECIPE CARD -->
     <RecipeCard @deleted="home" :cardAttrs="{ loading }" v-bind="recipe" />
   </v-container>
 </template>

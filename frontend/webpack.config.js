@@ -47,13 +47,13 @@ module.exports = {
     ],
   },
   plugins: [
+    new Dotenv({
+      path: "./.env",
+    }),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       title: process.env.APP_NAME,
-    }),
-    new Dotenv({
-      path: "./.env",
     }),
   ],
   output: {

@@ -1,13 +1,19 @@
+<!-- RECIPE FORM -->
 <template>
   <v-row>
+    <!-- FORM SIDE -->
     <v-col lg="6" cols="12">
       <v-card v-bind="cardAttrs">
+        <!-- FORM TITLE -->
         <v-card-title>
           <slot name="header" />
         </v-card-title>
 
+        <!-- THE FORM -->
         <v-form :disabled="formDisabled" ref="form">
+          <!-- STEPPER -->
           <v-stepper v-model="step">
+            <!-- STEP NAV -->
             <v-stepper-header>
               <v-stepper-step :complete="stepOneCompleted" step="1">
                 Summary
@@ -25,7 +31,10 @@
                 Photos
               </v-stepper-step>
             </v-stepper-header>
+
+            <!-- STEP CONTENT -->
             <v-stepper-items>
+              <!-- SUMMARY STEP -->
               <v-stepper-content step="1">
                 <v-text-field
                   class="pt-1"
@@ -54,6 +63,7 @@
                 />
               </v-stepper-content>
 
+              <!-- INGREDIENTS STEP -->
               <v-stepper-content step="2">
                 <v-row dense class="pt-1">
                   <v-col sm="8">
@@ -102,6 +112,7 @@
                 </v-list>
               </v-stepper-content>
 
+              <!-- STEPS STEP -->
               <v-stepper-content step="3">
                 <v-textarea
                   class="pt-1"
@@ -137,6 +148,7 @@
                 </v-list>
               </v-stepper-content>
 
+              <!-- PHOTOS STEP -->
               <v-stepper-content step="4">
                 <v-row dense class="mt-1">
                   <template v-for="(photo, key) in values.photos">
@@ -168,12 +180,17 @@
 
           <v-card-actions>
             <v-divider class="mx-4" />
+            <!-- BACK BUTTON -->
             <v-btn text v-if="step > 1" dark color="blue" @click="step--">
               Back
             </v-btn>
+
+            <!-- NEXT BUTTON -->
             <v-btn text v-if="step < 4" color="purple" @click="step++">
               Next
             </v-btn>
+
+            <!-- SAVE BUTTON -->
             <v-btn
               :dark="valid"
               v-if="step >= 4"
@@ -187,6 +204,8 @@
         </v-form>
       </v-card>
     </v-col>
+
+    <!-- PREVEW SIDE -->
     <v-col lg="6" cols="12">
       <v-card>
         <v-card-title>
@@ -194,6 +213,7 @@
           <v-divider class="mx-2" />
         </v-card-title>
 
+        <!-- CARD PREVIEW -->
         <v-card-text>
           <preview-card @deleted="deleted" :tab="step - 1" v-bind="values" />
         </v-card-text>
@@ -234,7 +254,29 @@ export default {
   }),
 
   props: {
+    /**
+     * For bind the card
+     *
+     */
     cardAttrs: Object,
+
+    /**
+     * This props will init the data when the component is mounted.
+     * btw this prop will work with v-model
+     *
+     * for format please see :
+     *
+     * ```
+     * {
+     *  name: String,
+     *  category: String,
+     *  description: String,
+     *  photos: File[],
+     *  ingredients: { name: String, qty: String }[],
+     *  steps: String[],
+     * }
+     * ```
+     */
     value: {
       required: false,
     },
@@ -250,8 +292,6 @@ export default {
   },
 
   computed: {
-    syncValueProps() {},
-
     formDisabled() {
       return !!this.cardAttrs?.loading;
     },

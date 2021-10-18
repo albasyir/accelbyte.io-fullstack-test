@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Recipe, { RecipeType } from "../../models/Recipe";
+import Recipe, { RecipeType } from "@/models/Recipe";
 
 export default class RecipeController {
   /**

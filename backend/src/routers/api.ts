@@ -1,5 +1,5 @@
 import { Router } from "express";
-import RecipeController from "../app/controllers/RecipeController";
+import RecipeController from "@/app/controllers/RecipeController";
 
 /**
  * API Routes

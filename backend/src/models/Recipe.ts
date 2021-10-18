@@ -1,4 +1,4 @@
-import mongoose from "../plugins/mongoose";
+import mongoose from "@/plugins/mongoose";
 
 export enum RecipeType {
   MAIN = "main course",

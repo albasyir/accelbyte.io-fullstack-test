@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-app-bar src="https://picsum.photos/1920/1080?random" app dark>
+      <!-- APP BAR BACKROUD -->
       <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
@@ -8,6 +9,7 @@
         ></v-img>
       </template>
 
+      <!-- TITLE -->
       <router-link style="text-decoration: none; color: inherit" to="/" dark>
         <v-app-bar-title> Famous Recipe </v-app-bar-title>
       </router-link>
@@ -15,6 +17,7 @@
       <v-spacer />
 
       <template v-if="disableFilter">
+        <!-- KEYWORD FILTER -->
         <v-text-field
           :loading="searchLoading"
           hide-details
@@ -31,6 +34,7 @@
 
         <v-spacer />
 
+        <!-- CATEGORY FILTER -->
         <v-select
           :loading="searchLoading"
           hide-details
@@ -47,15 +51,18 @@
 
       <v-spacer />
 
+      <!-- ADD BUTTON -->
       <v-btn icon :to="{ name: 'recipe-create' }">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-app-bar>
 
+    <!-- MAIN APPLICATION WARPER -->
     <v-main>
       <router-view />
     </v-main>
 
+    <!-- SNACKBAR -->
     <v-snackbar v-model="snackbarShow" v-bind="snackbar.attrs">
       <div v-html="snackbar.content" />
       <template v-slot:action="{ attrs }">
@@ -71,6 +78,7 @@
       </template>
     </v-snackbar>
 
+    <!-- FOOTER -->
     <v-footer app>
       Abdul Aziz Al Basyir
       <v-spacer />
@@ -81,7 +89,7 @@
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
       filter: {
         keyword: "",
@@ -92,7 +100,7 @@ export default {
   },
 
   computed: {
-    snackbar: function() {
+    snackbar: function () {
       this.snackbarShow = false;
       this.snackbarShow = true;
       return this.$store.getters.snackbar;
@@ -112,7 +120,7 @@ export default {
       this.filter.keyword = "";
       this.onFilter();
     },
-    onFilter: function() {
+    onFilter: function () {
       if (this.$route.path != "/") this.$router.push("/");
 
       this.$store.commit("recipe/setKeyword", this.filter.keyword);

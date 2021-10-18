@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!-- RECIPE FORM -->
     <recipe-form
       :value="compitableRecipe"
       :cardAttrs="{ loading: loadingDetail || loadingUpdate }"

@@ -1,3 +1,5 @@
+require("module-alias/register");
+
 // pripare bootstrap and injection
 import { expressInjection } from "./src/plugins";
 import middleware from "./src/app/middleware";

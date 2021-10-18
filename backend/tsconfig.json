@@ -6,8 +6,8 @@
     "strict": true,
     "esModuleInterop": true,
     "paths": {
-      "@root/*": ["*"],
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@root/*": ["*"]
     }
   },
   "exclude": ["node_modules"]

@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!-- RECIPE LIST -->
     <v-row>
       <v-col v-for="(recipe, key) in list" :key="key" cols="12" sm="6" md="4">
         <recipe-card
@@ -10,6 +11,7 @@
         />
       </v-col>
 
+      <!-- THIS CARD FOR ADD NEW ONE -->
       <v-col cols="12" sm="6" md="4">
         <recipe-card
           :cardAttrs="{ width: '100%', height: '100%' }"

@@ -17,6 +17,9 @@ export default {
   },
 
   mutations: {
+    /**
+     * this should be show a snackbar
+     */
     setErrors(state, htmlMsg) {
       state.snackbar = {
         content: htmlMsg,

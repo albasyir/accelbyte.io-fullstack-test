@@ -5,6 +5,10 @@ const request = axios.create({
   baseURL: process.env.RECIPE_API,
 });
 
+/**
+ * Add a request interceptor
+ *
+ */
 request.interceptors.response.use(
   (result) => {
     return result;
