@@ -27,7 +27,7 @@ This project using Vuetify as UI Framework!, Looks simple as material design!
 ### 🦸‍♂️ VS Code Auto Config
 
 this project provide `.devcontainer.json` means you can open the container made easy and
-all plugins already installed in few minutes!, Happy coding ❤️
+all plugins already installed in few minutes!, you should only focus coding, Happy coding ❤️
 
 ## How to get started ?
 
