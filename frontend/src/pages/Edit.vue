@@ -4,16 +4,15 @@
       :value="compitableRecipe"
       :cardAttrs="{ loading: loadingDetail || loadingUpdate }"
       @submit="sendData"
+      @deleted="deleted"
     >
-      <template v-slot:header>
-        Edit Recipe
-      </template>
+      <template v-slot:header> Edit Recipe </template>
     </recipe-form>
   </v-container>
 </template>
 
 <script>
-import RecipeForm from "../components/RecipeForm.vue";
+import RecipeForm from "@/components/RecipeForm.vue";
 
 import { mapActions, mapGetters } from "vuex";
 
@@ -32,6 +31,10 @@ export default {
       this.update({ id: this.id, data: editedRecipeData }).then(() => {
         this.$router.push("/");
       });
+    },
+
+    deleted() {
+      this.$router.push("/");
     },
   },
 

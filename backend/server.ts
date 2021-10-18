@@ -1,9 +1,11 @@
 // pripare bootstrap and injection
 import { expressInjection } from "./src/plugins";
+import middleware from "./src/app/middleware";
 
 // pripare express
 import express, { Router } from "express";
 const app = express();
+app.use(middleware);
 
 // inject our plugin
 expressInjection(app);

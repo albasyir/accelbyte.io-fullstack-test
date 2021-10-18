@@ -111,9 +111,7 @@
                   v-model="tempStep"
                   height="80px"
                 />
-                <v-btn @click="pushTempStep">
-                  Add Step
-                </v-btn>
+                <v-btn @click="pushTempStep"> Add Step </v-btn>
 
                 <v-list dense>
                   <v-list-item
@@ -197,7 +195,7 @@
         </v-card-title>
 
         <v-card-text>
-          <preview-card :tab="step - 1" v-bind="values" />
+          <preview-card @deleted="deleted" :tab="step - 1" v-bind="values" />
         </v-card-text>
       </v-card>
     </v-col>
@@ -205,7 +203,7 @@
 </template>
 
 <script>
-import PreviewCard from "../components/RecipeCard.vue";
+import PreviewCard from "./RecipeCard.vue";
 
 export default {
   components: {
@@ -293,6 +291,10 @@ export default {
   },
 
   methods: {
+    deleted(attrs) {
+      this.$emit("deleted", attrs);
+    },
+
     submit() {
       if (this.valid) this.$emit("submit", this.values);
     },

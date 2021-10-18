@@ -1,5 +1,5 @@
-import axios from "../../plugins/axios";
-import serialize from "../../plugins/object-to-formdata";
+import axios from "@/plugins/axios";
+import serialize from "@/plugins/object-to-formdata";
 
 export default {
   namespaced: true,

@@ -1,9 +1,7 @@
 <template>
   <v-container>
     <recipe-form :cardAttrs="{ loading }" @submit="sendData">
-      <template v-slot:header>
-        Create Recipe
-      </template>
+      <template v-slot:header> Create Recipe </template>
     </recipe-form>
   </v-container>
 </template>
@@ -11,7 +9,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import RecipeForm from "../components/RecipeForm.vue";
+import RecipeForm from "@/components/RecipeForm.vue";
 
 export default {
   components: {

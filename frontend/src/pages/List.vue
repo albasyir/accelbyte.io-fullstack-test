@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import RecipeCard from "../components/RecipeCard.vue";
+import RecipeCard from "@/components/RecipeCard.vue";
 
 import { mapActions, mapGetters } from "vuex";
 

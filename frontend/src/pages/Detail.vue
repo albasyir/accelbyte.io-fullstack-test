@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <RecipeCard :cardAttrs="{ loading }" v-bind="recipe" />
+    <RecipeCard @deleted="home" :cardAttrs="{ loading }" v-bind="recipe" />
   </v-container>
 </template>
 
@@ -18,6 +18,14 @@ export default {
     ...mapActions({
       fetch: "recipe/fetchOne",
     }),
+
+    back() {
+      this.$router.go(-1);
+    },
+
+    home() {
+      this.$router.push("/");
+    },
   },
 
   computed: {
@@ -32,7 +40,7 @@ export default {
   },
 
   beforeMount() {
-    this.fetch(this.id);
+    this.fetch(this.id).catch(this.back);
   },
 };
 </script>
